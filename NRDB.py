@@ -1,5 +1,7 @@
 import vapoursynth as vs
 
+import importlib
+
 
 def NRDB(input, deband="", range=None, db_Y=64, db_Cb=0, db_Cr=0, grainY=0, grainC=0, dynamic_grain=False, keep_tv_range=False, nr="", planes=[0], sigma=4.0, sigma2=4.0):
     core = vs.get_core()
@@ -28,6 +30,21 @@ def NRDB(input, deband="", range=None, db_Y=64, db_Cb=0, db_Cr=0, grainY=0, grai
     elif nr in ["nop", "nop()"]:
         nred = src
     else:
+        if not nr.startswith("core."):
+            # How evil is this?
+            
+            parenthesis = nr.find("(")
+            if parenthesis == -1:
+                raise RuntimeError("NRDB: no parenthesis found in nr.")
+            
+            dot = nr.find(".", 0, parenthesis)
+            if dot == -1:
+                raise RuntimeError("NRDB: no dot found in nr before the first parenthesis.")
+            
+            module = importlib.import_module(nr[0:dot])
+            
+            nr = "module" + nr[dot:]
+            
         nred = eval(nr.format(clip="src", planes="planes"))
         
         
@@ -38,6 +55,19 @@ def NRDB(input, deband="", range=None, db_Y=64, db_Cb=0, db_Cr=0, grainY=0, grai
     elif deband in ["nop", "nop()"]:
         db = nred
     else:
+        if not deband.startswith("core."):
+            parenthesis = deband.find("(")
+            if parenthesis == -1:
+                raise RuntimeError("NRDB: no parenthesis found in deband.")
+            
+            dot = deband.find(".", 0, parenthesis)
+            if dot == -1:
+                raise RuntimeError("NRDB: no dot found in deband before the first parenthesis.")
+            
+            module = importlib.import_module(deband[0:dot])
+            
+            deband = "module" + deband[dot:]
+            
         db = eval(deband.format(clip="nred", planes="planes"))
         
         
