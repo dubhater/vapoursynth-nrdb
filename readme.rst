@@ -18,9 +18,9 @@ Parameters:
         A clip to process.
         
     *deband*
-        Custom debanding filter/function. Use like so::
+        Custom debanding filter/function. It must be either a filter from a binary plugin, or a function from a module that can be imported. Use like so::
         
-            result = NRDB(video, deband="your_awesome_debanding_function(input={clip}, planes={planes})")
+            result = NRDB(video, deband="module.awesome_debanding_function(input={clip}, planes={planes})")
         
         or::
         
