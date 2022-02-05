@@ -4,7 +4,7 @@ import importlib
 
 
 def NRDB(input, deband="", range=None, db_Y=64, db_Cb=0, db_Cr=0, grainY=0, grainC=0, dynamic_grain=False, keep_tv_range=False, nr="", planes=[0], sigma=4.0, sigma2=4.0):
-    core = vs.get_core()
+    core = vs.core
     
     src = input
     
